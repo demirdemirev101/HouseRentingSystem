@@ -1,7 +1,3 @@
-using HouseRentingSystem.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 namespace HouseRentingSystem
 {
     public class Program
@@ -10,27 +6,16 @@ namespace HouseRentingSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<HouseRentingDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-            })
-              .AddEntityFrameworkStores<HouseRentingDbContext>();
+            builder.Services.AddApplicationDbContext(builder.Configuration);
+            builder.Services.AddApplicationIdentity(builder.Configuration);
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddApplicationServices();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+          
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
