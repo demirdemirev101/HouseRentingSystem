@@ -19,8 +19,6 @@ namespace HouseRentingSystem.Data.Models
         public string Description { get; set; } = string.Empty;
         [Required]
         public string ImageUrl { get; set; } = string.Empty;
-        [MaxLength(HousePricePerMonthMax),
-        MinLength(HousePricePerMonthMin)]
         public decimal PricePerMonth { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
