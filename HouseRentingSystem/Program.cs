@@ -1,4 +1,6 @@
+using HouseRentingSystem.Contacts.Agent;
 using HouseRentingSystem.Contacts.House;
+using HouseRentingSystem.Services.Agent;
 using HouseRentingSystem.Services.House;
 
 namespace HouseRentingSystem
@@ -17,6 +19,7 @@ namespace HouseRentingSystem
             builder.Services.AddApplicationServices();
 
             builder.Services.AddTransient<IHouseService, HouseService>();
+            builder.Services.AddTransient<IAgentService, AgentService>();
 
             var app = builder.Build();
 
