@@ -1,3 +1,6 @@
+using HouseRentingSystem.Contacts.House;
+using HouseRentingSystem.Services.House;
+
 namespace HouseRentingSystem
 {
     public class Program
@@ -12,6 +15,8 @@ namespace HouseRentingSystem
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddApplicationServices();
+
+            builder.Services.AddTransient<IHouseService, HouseService>();
 
             var app = builder.Build();
 

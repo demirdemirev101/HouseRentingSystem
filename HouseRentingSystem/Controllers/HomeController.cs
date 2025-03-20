@@ -1,15 +1,22 @@
-﻿using System.Diagnostics;
+﻿using HouseRentingSystem.Contacts.House;
 using HouseRentingSystem.Models;
-using HouseRentingSystem.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace HouseRentingSystem.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHouseService _houses;
+        public HomeController(IHouseService houses)
+        {
+            _houses = houses;
+        }
         public  async Task<IActionResult> Index()
         {
-            return View(new IndexViewModel());
+            var houses = await _houses.LastThreeHouses();
+
+            return View(houses);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
