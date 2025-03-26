@@ -37,5 +37,10 @@ namespace HouseRentingSystem.Services.Agent
             await _data.Agents.AddAsync(agent);
             await _data.SaveChangesAsync();
         }
+
+        public async Task<int> GetAgentId(string userId)
+        {
+            return _data.Agents.FirstOrDefaultAsync(a => a.UserId == userId).Id;
+        }
     }
 }
