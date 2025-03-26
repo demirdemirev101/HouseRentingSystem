@@ -61,9 +61,23 @@ namespace HouseRentingSystem.Controllers
             return RedirectToAction(nameof(Details), new { id = newHouseId });
         }
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] AllHousesQueryModel query)
         {
-            return View(new AllHousesQueryModel());
+            var queryResult = houses.All(
+                query.Category,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllHousesQueryModel.HousesPerPage
+                );
+
+            query.TotalHousesCount = queryResult.TotalHousesCount;
+            query.Houses = queryResult.Houses;
+
+            var houseCategories=houses.AllCategoriesNames();
+            query.Categories = await houseCategories;
+
+            return View(query);
         }
         public async Task<IActionResult> Mine()
         {
