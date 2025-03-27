@@ -19,12 +19,12 @@ namespace HouseRentingSystem.Services.Agent
         }
         public async Task<bool> UserWithPhoneNumberExists(string phoneNumber)
         {
-            return  await _data.Agents.AnyAsync(a => a.PhoneNumber == phoneNumber);
+            return await _data.Agents.AnyAsync(a => a.PhoneNumber == phoneNumber);
         }
         public async Task<bool> UserHasRents(string userId)
         {
             return await
-                _data.Houses.AnyAsync(h=>h.RenterId == userId);
+                _data.Houses.AnyAsync(h => h.RenterId == userId);
         }
         public async Task Create(string userId, string phoneNumber)
         {
@@ -40,7 +40,11 @@ namespace HouseRentingSystem.Services.Agent
 
         public async Task<int> GetAgentId(string userId)
         {
-            return _data.Agents.FirstOrDefaultAsync(a => a.UserId == userId).Id;
+            return await _data
+                    .Agents
+                    .Where(a => a.UserId == userId)
+                    .Select(a => a.Id)
+                    .FirstAsync();
         }
     }
 }

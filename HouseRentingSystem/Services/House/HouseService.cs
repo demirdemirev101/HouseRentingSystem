@@ -17,7 +17,7 @@ namespace HouseRentingSystem.Services.House
 
         public async Task<IList<HouseIndexServiceModel>> LastThreeHouses()
         {
-            return _data
+            return await _data
                         .Houses
                         .OrderByDescending(h => h.Id)
                         .Select(h => new HouseIndexServiceModel()
@@ -27,7 +27,7 @@ namespace HouseRentingSystem.Services.House
                             ImageUrl = h.ImageUrl
                         })
                         .Take(3)
-                        .ToList();
+                        .ToListAsync();
         }
         public async Task<IList<HouseCategoryServiceModel>> AllCategories()
         {
@@ -63,7 +63,7 @@ namespace HouseRentingSystem.Services.House
             return house.Id;
         }
 
-        public HouseQueryServiceModel All(string category = null, string searchTerm = null, HouseSorting sorting = HouseSorting.Newest, int currentPage = 1, int housesPerPage = 1)
+        public async Task<HouseQueryServiceModel> All(string category = null, string searchTerm = null, HouseSorting sorting = HouseSorting.Newest, int currentPage = 1, int housesPerPage = 1)
         {
             var housesQuery = _data.Houses.AsQueryable();
 
@@ -107,7 +107,7 @@ namespace HouseRentingSystem.Services.House
                 })
                 .ToList();
 
-            var totoalHouses = housesQuery.Count();
+            var totoalHouses = await housesQuery.CountAsync();
 
             return new HouseQueryServiceModel()
             {
@@ -123,6 +123,42 @@ namespace HouseRentingSystem.Services.House
                             .Select(c => c.Name)
                             .Distinct()
                             .ToListAsync();
+        }
+
+        private  IList<HouseServiceModel> ProjectModel(IList<Data.Models.House> houses)
+        {
+            var resultHouses = houses
+                .Select(h => new HouseServiceModel
+                {
+                    Id = h.Id,
+                    Title = h.Title,
+                    Address = h.Address,
+                    ImageUrl = h.ImageUrl,
+                    PricePerMonth = h.PricePerMonth,
+                    IsRented = h.RenterId != null
+                })
+                .ToList();
+
+            return resultHouses;
+        }
+        public async Task<IList<HouseServiceModel>> AllHousesByAgentId(int agentId)
+        {
+           var houses= await _data
+                   .Houses
+                   .Where(h => h.AgentId == agentId)
+                   .ToListAsync();
+
+            return ProjectModel(houses);
+        }
+
+        public async Task<IList<HouseServiceModel>> AllHousesByUserId(string userId)
+        {
+            var houses = await _data
+                .Houses
+                .Where(h => h.RenterId == userId)
+                .ToListAsync();
+
+            return ProjectModel(houses);
         }
     }
 }

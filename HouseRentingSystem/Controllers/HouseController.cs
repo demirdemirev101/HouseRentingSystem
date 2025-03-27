@@ -3,6 +3,7 @@ using HouseRentingSystem.Contacts.House;
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Infrastructure;
 using HouseRentingSystem.Models.House;
+using HouseRentingSystem.Services.House.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,16 +55,16 @@ namespace HouseRentingSystem.Controllers
                 return View(model);
             }
 
-            var agentId = await agents.GetAgentId(User.Id());
+            var agentId = agents.GetAgentId(User.Id());
 
-            var newHouseId= await houses.Create(model.Title, model.Address, model.Description, model.ImageUrl,model.PricePerMonth,model.CategoryId,agentId);
+            var newHouseId= await houses.Create(model.Title, model.Address, model.Description, model.ImageUrl,model.PricePerMonth,model.CategoryId,await agentId);
 
             return RedirectToAction(nameof(Details), new { id = newHouseId });
         }
         [AllowAnonymous]
         public async Task<IActionResult> All([FromQuery] AllHousesQueryModel query)
         {
-            var queryResult = houses.All(
+            var queryResult = await houses.All(
                 query.Category,
                 query.SearchTerm,
                 query.Sorting,
@@ -81,7 +82,22 @@ namespace HouseRentingSystem.Controllers
         }
         public async Task<IActionResult> Mine()
         {
-            return View(new AllHousesQueryModel());
+            IList<HouseServiceModel> myHouses = null;
+
+            var userId = User.Id();
+
+            if(await agents.ExistsById(userId))
+            {
+                var currentAgentId=  await agents.GetAgentId(userId);
+
+                myHouses = await houses.AllHousesByAgentId(currentAgentId);
+            }
+            else
+            {
+                myHouses=  await houses.AllHousesByUserId(userId);
+            }
+
+            return View(myHouses);
         }
         public async Task<IActionResult> Details(int id)
         {
