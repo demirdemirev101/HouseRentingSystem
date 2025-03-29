@@ -25,6 +25,7 @@ namespace HouseRentingSystem.Contacts.House
         Task Edit(int houseId, string title, string address, string description, string imageUrl, decimal price, int categoryId);
 
         Task<bool> HasAgentWithId(int houseId, string currentUserId);
-        Task<int> GetHouseCategoryId(int houseId);  
+        Task<int> GetHouseCategoryId(int houseId);
+        Task Delete(int houseId);
     }
 }

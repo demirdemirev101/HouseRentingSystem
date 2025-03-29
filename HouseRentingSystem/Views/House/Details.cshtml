@@ -26,13 +26,11 @@
             <div class="form-inline">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    if (this.User.IsInRole("Agent"))
-                    {
-                        <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
-                           asp-route-id="@Model.Id">Edit</a>
-                        <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
-                           asp-route-id="@Model.Id">Delete</a>
-                    }
+                    <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
+                       asp-route-id="@Model.Id">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
+                       asp-route-id="@Model.Id">Delete</a>
+
                     @if (!Model.IsRented)
                     {
                         <form class="ml-2" asp-controller="House"

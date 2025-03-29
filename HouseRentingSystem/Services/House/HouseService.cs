@@ -69,14 +69,14 @@ namespace HouseRentingSystem.Services.House
         {
             var housesQuery = _data.Houses.AsQueryable();
 
-            if(!string.IsNullOrWhiteSpace(category))
+            if (!string.IsNullOrWhiteSpace(category))
             {
                 housesQuery = _data
                     .Houses
                     .Where(h => h.Category.Name == category);
             }
 
-            if(!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 housesQuery = housesQuery
                     .Where(h =>
@@ -95,17 +95,17 @@ namespace HouseRentingSystem.Services.House
                 _ => housesQuery.OrderByDescending(h => h.Id)
             };
 
-            var houses=housesQuery
-                .Skip((currentPage-1)*housesPerPage)
+            var houses = housesQuery
+                .Skip((currentPage - 1) * housesPerPage)
                 .Take(housesPerPage)
-                .Select(h=> new HouseServiceModel
+                .Select(h => new HouseServiceModel
                 {
                     Id = h.Id,
                     Title = h.Title,
                     Address = h.Address,
                     ImageUrl = h.ImageUrl,
-                    IsRented=h.RenterId!=null,
-                    PricePerMonth=h.PricePerMonth
+                    IsRented = h.RenterId != null,
+                    PricePerMonth = h.PricePerMonth
                 })
                 .ToList();
 
@@ -127,7 +127,7 @@ namespace HouseRentingSystem.Services.House
                             .ToListAsync();
         }
 
-        private  IList<HouseServiceModel> ProjectModel(IList<Data.Models.House> houses)
+        private IList<HouseServiceModel> ProjectModel(IList<Data.Models.House> houses)
         {
             var resultHouses = houses
                 .Select(h => new HouseServiceModel
@@ -145,10 +145,10 @@ namespace HouseRentingSystem.Services.House
         }
         public async Task<IList<HouseServiceModel>> AllHousesByAgentId(int agentId)
         {
-           var houses= await _data
-                   .Houses
-                   .Where(h => h.AgentId == agentId)
-                   .ToListAsync();
+            var houses = await _data
+                    .Houses
+                    .Where(h => h.AgentId == agentId)
+                    .ToListAsync();
 
             return ProjectModel(houses);
         }
@@ -167,11 +167,11 @@ namespace HouseRentingSystem.Services.House
         {
             return await _data
                        .Houses
-                       .AnyAsync(h=>h.Id==id);
+                       .AnyAsync(h => h.Id == id);
         }
-        public async Task<HouseDetailsServiceModel> HouseDetailsById(int id) 
+        public async Task<HouseDetailsServiceModel> HouseDetailsById(int id)
         {
-            var house= await _data
+            var house = await _data
                 .Houses
                 .Where(h => h.Id == id)
                 .Select(h => new HouseDetailsServiceModel()
@@ -192,29 +192,29 @@ namespace HouseRentingSystem.Services.House
                 })
                 .FirstOrDefaultAsync();
 
-            return house; 
+            return house;
         }
 
         public async Task Edit(int houseId, string title, string address, string description, string imageUrl, decimal price, int categoryId)
         {
             var house = _data.Houses.Find(houseId);
 
-            house.Title=title;
-            house.Address=address;
+            house.Title = title;
+            house.Address = address;
             house.Description = description;
-            house.ImageUrl=imageUrl;
-            house.PricePerMonth=price;
-            house.CategoryId=categoryId;
+            house.ImageUrl = imageUrl;
+            house.PricePerMonth = price;
+            house.CategoryId = categoryId;
 
             await _data.SaveChangesAsync();
         }
 
         public async Task<bool> HasAgentWithId(int houseId, string currentUserId)
         {
-            var house=await _data.Houses.FindAsync(houseId);
-            var agent= await _data.Agents.FirstOrDefaultAsync(a=> a.Id==house.AgentId);
+            var house = await _data.Houses.FindAsync(houseId);
+            var agent = await _data.Agents.FirstOrDefaultAsync(a => a.Id == house.AgentId);
 
-            if (agent==null)
+            if (agent == null)
             {
                 return false;
             }
@@ -232,6 +232,13 @@ namespace HouseRentingSystem.Services.House
             var category = _data.Houses.FindAsync(houseId).Result.CategoryId;
 
             return category;
+        }
+
+        public async Task Delete(int houseId)
+        {
+            var house = await _data.Houses.FindAsync(houseId);
+            _data.Remove(house);
+            await _data.SaveChangesAsync();
         }
     }
 }
