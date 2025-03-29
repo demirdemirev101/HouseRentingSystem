@@ -18,5 +18,8 @@ namespace HouseRentingSystem.Contacts.House
 
         Task<IList<HouseServiceModel>> AllHousesByAgentId(int agentId);
         Task<IList<HouseServiceModel>> AllHousesByUserId(string userId);
+
+        Task<bool> Exists(int id);
+        Task<HouseDetailsServiceModel> HouseDetailsById(int id);
     }
 }

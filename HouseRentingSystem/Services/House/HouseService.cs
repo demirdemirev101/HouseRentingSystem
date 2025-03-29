@@ -2,7 +2,9 @@
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Infrastructure;
 using HouseRentingSystem.Models.House;
+using HouseRentingSystem.Services.Agent.Models;
 using HouseRentingSystem.Services.House.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HouseRentingSystem.Services.House
@@ -159,6 +161,38 @@ namespace HouseRentingSystem.Services.House
                 .ToListAsync();
 
             return ProjectModel(houses);
+        }
+
+        public async Task<bool> Exists(int id)
+        {
+            return await _data
+                       .Houses
+                       .AnyAsync(h=>h.Id==id);
+        }
+        public async Task<HouseDetailsServiceModel> HouseDetailsById(int id) 
+        {
+            var house= await _data
+                .Houses
+                .Where(h => h.Id == id)
+                .Select(h => new HouseDetailsServiceModel()
+                {
+                    Id = h.Id,
+                    Title = h.Title,
+                    Address = h.Address,
+                    Description = h.Description,
+                    ImageUrl = h.ImageUrl,
+                    PricePerMonth = h.PricePerMonth,
+                    IsRented = h.RenterId != null,
+                    Category = h.Category.Name,
+                    Agent = new AgentServiceModel()
+                    {
+                        PhoneNumber = h.Agent.PhoneNumber,
+                        Email = h.Agent.User.Email
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            return house; 
         }
     }
 }
