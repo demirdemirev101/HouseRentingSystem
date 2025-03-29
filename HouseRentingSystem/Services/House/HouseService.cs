@@ -194,5 +194,44 @@ namespace HouseRentingSystem.Services.House
 
             return house; 
         }
+
+        public async Task Edit(int houseId, string title, string address, string description, string imageUrl, decimal price, int categoryId)
+        {
+            var house = _data.Houses.Find(houseId);
+
+            house.Title=title;
+            house.Address=address;
+            house.Description = description;
+            house.ImageUrl=imageUrl;
+            house.PricePerMonth=price;
+            house.CategoryId=categoryId;
+
+            await _data.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasAgentWithId(int houseId, string currentUserId)
+        {
+            var house=await _data.Houses.FindAsync(houseId);
+            var agent= await _data.Agents.FirstOrDefaultAsync(a=> a.Id==house.AgentId);
+
+            if (agent==null)
+            {
+                return false;
+            }
+
+            if (agent.UserId != currentUserId)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<int> GetHouseCategoryId(int houseId)
+        {
+            var category = _data.Houses.FindAsync(houseId).Result.CategoryId;
+
+            return category;
+        }
     }
 }
