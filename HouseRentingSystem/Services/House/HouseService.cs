@@ -273,5 +273,14 @@ namespace HouseRentingSystem.Services.House
 
             _data.SaveChangesAsync();
         }
+
+        public async Task Leave(int houseId)
+        {
+            var house = await _data.Houses.FindAsync(houseId);
+
+            house.RenterId = null;
+
+           await _data.SaveChangesAsync();
+        }
     }
 }

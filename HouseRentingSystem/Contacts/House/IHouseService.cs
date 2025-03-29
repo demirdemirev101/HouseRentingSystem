@@ -31,5 +31,6 @@ namespace HouseRentingSystem.Contacts.House
         Task<bool> IsRented(int id);
         Task<bool> IsRentedByUserWithId(int houseId, string userId);
         void Rent(int houseId, string userId);
+        Task Leave(int houseId);
     }
 }
