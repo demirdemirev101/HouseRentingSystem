@@ -240,5 +240,38 @@ namespace HouseRentingSystem.Services.House
             _data.Remove(house);
             await _data.SaveChangesAsync();
         }
+
+        public async Task<bool> IsRented(int id)
+        {
+            var house= await _data.Houses.FindAsync(id);
+            var result=house.RenterId!=null;
+            return result;
+        }
+
+        public async Task<bool> IsRentedByUserWithId(int id, string userId)
+        {
+            var house = await _data.Houses.FindAsync(id);
+
+            if (house==null)
+            {
+                return false;
+            }
+
+            if (house.RenterId!=userId)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async void Rent(int houseId, string userId)
+        {
+            var house=await _data.Houses.FindAsync(houseId);
+
+            house.RenterId=userId;
+
+            _data.SaveChangesAsync();
+        }
     }
 }
