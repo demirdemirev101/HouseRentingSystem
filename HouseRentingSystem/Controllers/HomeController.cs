@@ -19,7 +19,7 @@ namespace HouseRentingSystem.Controllers
             return View(houses);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error(int statusCode)
         {
             if (statusCode==400)
