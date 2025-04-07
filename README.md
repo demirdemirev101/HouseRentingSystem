@@ -27,3 +27,13 @@
 ---
 
 ## 🚀 How to Run Locally
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/demirdemirev101/HouseRentingSystem
+2.Open the solution in Visual Studio 2022+ or use the CLI.
+3.Create a local SQL Server database and configure the connection string in:
+   HouseRentingSystem.Web/appsettings.json
+4.Apply the database migrations:
+   dotnet ef database update
+5.Run the application:
+  dotnet run --project HouseRentingSystem.Web
