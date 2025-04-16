@@ -4,6 +4,7 @@ using HouseRentingSystem.Contacts.Statistic;
 using HouseRentingSystem.Services.Agent;
 using HouseRentingSystem.Services.House;
 using HouseRentingSystem.Services.Statistic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HouseRentingSystem
 {
@@ -18,7 +19,10 @@ namespace HouseRentingSystem
             builder.Services.AddApplicationDbContext(builder.Configuration);
             builder.Services.AddApplicationIdentity(builder.Configuration);
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options=>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
 
             builder.Services.AddApplicationServices();
 
