@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using HouseRentingSystem.Contacts;
+using System.ComponentModel;
 
 namespace HouseRentingSystem.Services.House.Models
 {
-    public class HouseServiceModel
+    public class HouseServiceModel : IHouseModel
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

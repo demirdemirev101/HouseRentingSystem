@@ -51,11 +51,23 @@ namespace HouseRentingSystem
 
             app.UseRouting();
 
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapDefaultControllerRoute();
             app.MapRazorPages();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "House Details",
+                    pattern: "/House/Details/{id}/{information}",
+                    defaults: new { Controller = "House", Action = "Details" });
+
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
+            });
 
             app.Run();
         }

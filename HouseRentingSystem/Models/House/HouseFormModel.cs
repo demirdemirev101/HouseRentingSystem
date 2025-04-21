@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HouseRentingSystem.Contacts;
+using System.ComponentModel.DataAnnotations;
 using static HouseRentingSystem.Data.DataConstants.House;
 namespace HouseRentingSystem.Models.House
 {
-    public class HouseFormModel
+    public class HouseFormModel : IHouseModel
     {
         [Required]
         [StringLength(HouseTitleMaxLength,

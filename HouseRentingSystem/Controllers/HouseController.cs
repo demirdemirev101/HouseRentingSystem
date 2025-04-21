@@ -7,6 +7,7 @@ using HouseRentingSystem.Services.House.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace HouseRentingSystem.Controllers
 {
@@ -59,7 +60,7 @@ namespace HouseRentingSystem.Controllers
 
             var newHouseId= await houses.Create(model.Title, model.Address, model.Description, model.ImageUrl,model.PricePerMonth,model.CategoryId,await agentId);
 
-            return RedirectToAction(nameof(Details), new { id = newHouseId });
+            return RedirectToAction(nameof(Details), new { id = newHouseId, information=model.GetInformation() });
         }
         [AllowAnonymous]
         public async Task<IActionResult> All([FromQuery] AllHousesQueryModel query)
@@ -99,7 +100,7 @@ namespace HouseRentingSystem.Controllers
 
             return View(myHouses);
         }
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string information)
         {
             if(await houses.Exists(id)==false)
             {
@@ -107,6 +108,11 @@ namespace HouseRentingSystem.Controllers
             }
 
             var houseModel= await houses.HouseDetailsById(id);
+
+            if(information!=houseModel.GetInformation())
+            {
+                return BadRequest();
+            }
 
             return View(houseModel);
         }
@@ -167,7 +173,8 @@ namespace HouseRentingSystem.Controllers
 
             await houses.Edit(id, house.Title, house.Address, house.Description, house.ImageUrl, house.PricePerMonth, house.CategoryId);
 
-            return RedirectToAction(nameof(Details), new {id=id});
+            return RedirectToAction(nameof(Details), new {id=id,
+            information=house.GetInformation()});
         }
         public async Task<IActionResult> Delete(int id)
         {
