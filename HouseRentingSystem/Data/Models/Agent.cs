@@ -12,6 +12,6 @@ namespace HouseRentingSystem.Data.Models
         public string PhoneNumber { get; set; }=string.Empty;
         [Required]
         public string UserId { get; set; }=string.Empty;
-        public IdentityUser User { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }
