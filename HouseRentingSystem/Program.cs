@@ -1,10 +1,13 @@
 using HouseRentingSystem.Contacts.Agent;
 using HouseRentingSystem.Contacts.House;
 using HouseRentingSystem.Contacts.Statistic;
+using HouseRentingSystem.Data;
+using HouseRentingSystem.Data.Models;
 using HouseRentingSystem.Services.Agent;
 using HouseRentingSystem.Services.House;
 using HouseRentingSystem.Services.Statistic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseRentingSystem
 {
@@ -13,8 +16,7 @@ namespace HouseRentingSystem
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.Configuration.AddUserSecrets<Program>();
+                   
 
             builder.Services.AddApplicationDbContext(builder.Configuration);
             builder.Services.AddApplicationIdentity(builder.Configuration);
